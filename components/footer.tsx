@@ -12,8 +12,8 @@ const Footer = () => {
               <div className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
                 <Image
                   width={250}
-                  height={50}
-                  src="/images/logo1.png"
+                  height={47}
+                  src="/images/warethecode-logo1.png"
                   alt="logo"
                 />
               </div>
