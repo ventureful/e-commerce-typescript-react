@@ -32,7 +32,7 @@ module.exports = {
     "airbnb",
     "prettier",
     "plugin:prettier/recommended",
-    "plugin:sonarjs/recommended",
+    // "plugin:sonarjs/recommended",
     "plugin:security/recommended",
   ],
 

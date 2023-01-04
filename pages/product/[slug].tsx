@@ -1,6 +1,15 @@
 import React from "react";
+import usePinCode, { usePinCodeT } from "../../hooks/usePinCode";
 
 const Product = () => {
+  const {
+    pinCode,
+    checkServiceAvailbilty,
+    onChangePin,
+    serviceTextColor,
+    serviceText,
+  }: usePinCodeT = usePinCode();
+
   return (
     <div>
       <section className="text-gray-600 body-font overflow-hidden">
@@ -157,12 +166,18 @@ const Product = () => {
                 </div>
               </div>
               <div className="flex">
-                <span className="title-font font-medium text-2xl text-gray-900">
+                <span className="title-font font-medium text-xl md:text-2xl text-gray-900">
                   $58.00
                 </span>
                 <button
                   type="button"
-                  className="flex ml-4 md:ml-14 text-white bg-purple-500 border-0 p-2 md:px-6 focus:outline-none hover:bg-purple-600 rounded"
+                  className="flex ml-4 md:ml-8 text-white bg-purple-500 border-0 py-2 px-2 text-sm md:text-lg md:px-6 focus:outline-none hover:bg-purple-600 rounded"
+                >
+                  Buy Now
+                </button>
+                <button
+                  type="button"
+                  className="flex ml-4 text-white bg-purple-500 border-0 py-2 px-2  text-sm md:text-lg  md:px-6 focus:outline-none hover:bg-purple-600 rounded"
                 >
                   Add to cart
                 </button>
@@ -182,6 +197,25 @@ const Product = () => {
                   </svg>
                 </button>
               </div>
+              <div className="pincode mt-6 flex space-x-2 text-sm">
+                <input
+                  className="px-2 border-2 border-gray-400 rounded-md outline-none"
+                  type="text"
+                  placeholder="Enter Pincode"
+                  value={pinCode}
+                  onChange={onChangePin}
+                />
+                <button
+                  type="button"
+                  onClick={checkServiceAvailbilty}
+                  className="flex ml-4 md:ml-14 text-white bg-purple-500 border-0 p-2 md:px-6 focus:outline-none hover:bg-purple-600 rounded"
+                >
+                  Check
+                </button>
+              </div>
+              <span className={`text-sm ${serviceTextColor}`}>
+                {serviceText}
+              </span>
             </div>
           </div>
         </div>
