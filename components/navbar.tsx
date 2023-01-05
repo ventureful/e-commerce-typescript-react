@@ -3,18 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useRef } from "react";
-import {
-  AiFillCloseCircle,
-  AiFillMinusCircle,
-  AiFillPlusCircle,
-  AiOutlineShoppingCart,
-} from "react-icons/ai";
+import { AiFillCloseCircle, AiOutlineShoppingCart } from "react-icons/ai";
 import { BsFillBagCheckFill } from "react-icons/bs";
+import useCartStore from "../hooks/useCartStore";
+import CartItem from "./cartItem";
 
 const OPEN_CART_CLASS = "translate-x-full";
 const CLOSE_CART_CLASS = "translate-x-0";
 
 const Navbar = () => {
+  const { cart = {}, subTotal = 0, clearCart } = useCartStore();
   const cartRef = useRef<HTMLDivElement | null>(null);
 
   const toggleCart = () => {
@@ -72,106 +70,20 @@ const Navbar = () => {
           <AiFillCloseCircle className="text-purple-500 text-lg" />
         </span>
         <ol className="list-decimal font-semibold">
-          <li>
-            <div className="item flex my-5">
-              <div className="w-2/3 font-semibold">Tshirt ware the code</div>
-              <div className="w-1/3 font-semibold flex items-center justify-center">
-                <span className="cursor-pointer mx-2">
-                  <AiFillPlusCircle className="text-purple-500 text-lg" />
-                </span>
-                <span className="text-sm">1</span>
-                <span className="cursor-pointer mx-2">
-                  <AiFillMinusCircle className="text-purple-500 text-lg" />
-                </span>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div className="item flex my-5">
-              <div className="w-2/3 font-semibold">Tshirt ware the code</div>
-              <div className="w-1/3 font-semibold flex items-center justify-center">
-                <span className="cursor-pointer mx-2">
-                  <AiFillPlusCircle className="text-purple-500 text-lg" />
-                </span>
-                <span className="text-sm">1</span>
-                <span className="cursor-pointer mx-2">
-                  <AiFillMinusCircle className="text-purple-500 text-lg" />
-                </span>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div className="item flex my-5">
-              <div className="w-2/3 font-semibold">Tshirt ware the code</div>
-              <div className="w-1/3 font-semibold flex items-center justify-center">
-                <span className="cursor-pointer mx-2">
-                  <AiFillPlusCircle className="text-purple-500 text-lg" />
-                </span>
-                <span className="text-sm">1</span>
-                <span className="cursor-pointer mx-2">
-                  <AiFillMinusCircle className="text-purple-500 text-lg" />
-                </span>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div className="item flex my-5">
-              <div className="w-2/3 font-semibold">Tshirt ware the code</div>
-              <div className="w-1/3 font-semibold flex items-center justify-center">
-                <span className="cursor-pointer mx-2">
-                  <AiFillPlusCircle className="text-purple-500 text-lg" />
-                </span>
-                <span className="text-sm">1</span>
-                <span className="cursor-pointer mx-2">
-                  <AiFillMinusCircle className="text-purple-500 text-lg" />
-                </span>
-              </div>
-            </div>
-          </li>
-
-          <li>
-            <div className="item flex my-5">
-              <div className="w-2/3 font-semibold">Tshirt ware the code</div>
-              <div className="w-1/3 font-semibold flex items-center justify-center">
-                <span className="cursor-pointer mx-2">
-                  <AiFillPlusCircle className="text-purple-500 text-lg" />
-                </span>
-                <span className="text-sm">1</span>
-                <span className="cursor-pointer mx-2">
-                  <AiFillMinusCircle className="text-purple-500 text-lg" />
-                </span>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div className="item flex my-5">
-              <div className="w-2/3 font-semibold">Tshirt ware the code</div>
-              <div className="w-1/3 font-semibold flex items-center justify-center">
-                <span className="cursor-pointer mx-2">
-                  <AiFillPlusCircle className="text-purple-500 text-lg" />
-                </span>
-                <span className="text-sm">1</span>
-                <span className="cursor-pointer mx-2">
-                  <AiFillMinusCircle className="text-purple-500 text-lg" />
-                </span>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div className="item flex my-5">
-              <div className="w-2/3 font-semibold">Tshirt ware the code</div>
-              <div className="w-1/3 font-semibold flex items-center justify-center">
-                <span className="cursor-pointer mx-2">
-                  <AiFillPlusCircle className="text-purple-500 text-lg" />
-                </span>
-                <span className="text-sm">1</span>
-                <span className="cursor-pointer mx-2">
-                  <AiFillMinusCircle className="text-purple-500 text-lg" />
-                </span>
-              </div>
-            </div>
-          </li>
+          {Object.keys(cart).length === 0 ? (
+            <div className="flex justify-center m-3">No items in the cart</div>
+          ) : (
+            Object.keys(cart)?.map((itemKey: string) => (
+              <li key={itemKey}>
+                <CartItem cart={cart[itemKey]} />
+              </li>
+            ))
+          )}
         </ol>
+        <div className="flex space-x-3 mb-3">
+          <h3>SubTotal: </h3>
+          <span>{subTotal}</span>
+        </div>
         <div className="flex space-x-2">
           <button
             type="button"
@@ -182,6 +94,7 @@ const Navbar = () => {
           </button>
           <button
             type="button"
+            onClick={clearCart}
             className="flex justify-center items-center text-white bg-purple-500 border-0 py-2 px-2 focus:outline-none hover:bg-purple-600 rounded text-sm"
           >
             Clear Cart

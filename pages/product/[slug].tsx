@@ -1,5 +1,6 @@
 import React from "react";
 import usePinCode, { usePinCodeT } from "../../hooks/usePinCode";
+import useCartStore from "../../hooks/useCartStore";
 
 const Product = () => {
   const {
@@ -9,6 +10,7 @@ const Product = () => {
     serviceTextColor,
     serviceText,
   }: usePinCodeT = usePinCode();
+  const { addToCart } = useCartStore();
 
   return (
     <div>
@@ -178,6 +180,16 @@ const Product = () => {
                 <button
                   type="button"
                   className="flex ml-4 text-white bg-purple-500 border-0 py-2 px-2  text-sm md:text-lg  md:px-6 focus:outline-none hover:bg-purple-600 rounded"
+                  onClick={() =>
+                    addToCart({
+                      itemCode: "1234",
+                      qty: 1,
+                      price: 100,
+                      name: "T-shirt",
+                      size: "L",
+                      variant: "blue",
+                    })
+                  }
                 >
                   Add to cart
                 </button>
