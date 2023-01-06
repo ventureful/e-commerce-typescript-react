@@ -2,6 +2,17 @@ import React from "react";
 import usePinCode, { usePinCodeT } from "../../hooks/usePinCode";
 import useCartStore from "../../hooks/useCartStore";
 
+function makeItemCode(length: number) {
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i += 1) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 const Product = () => {
   const {
     pinCode,
@@ -182,7 +193,7 @@ const Product = () => {
                   className="flex ml-4 text-white bg-purple-500 border-0 py-2 px-2  text-sm md:text-lg  md:px-6 focus:outline-none hover:bg-purple-600 rounded"
                   onClick={() =>
                     addToCart({
-                      itemCode: "1234",
+                      itemCode: makeItemCode(5),
                       qty: 1,
                       price: 100,
                       name: "T-shirt",

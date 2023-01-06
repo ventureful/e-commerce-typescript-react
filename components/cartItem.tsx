@@ -7,13 +7,16 @@ import useCartStore from "../hooks/useCartStore";
 
 interface CartItemProps {
   cart: addToCartStateType;
+  isCheckout?: boolean;
 }
 
-const CartItem = ({ cart }: CartItemProps) => {
+const CartItem = ({ cart, isCheckout }: CartItemProps) => {
   const { addToCart, removeFromCart } = useCartStore();
   return (
     <div className="item flex my-5">
-      <div className="w-2/3 font-semibold">{cart?.name || "-"}</div>
+      <div className={`${!isCheckout && "w-2/3"} font-semibold`}>
+        {cart?.name || "-"}
+      </div>
       <div className="w-1/3 font-semibold flex items-center justify-center">
         <span
           className="cursor-pointer mx-2"
@@ -32,5 +35,7 @@ const CartItem = ({ cart }: CartItemProps) => {
     </div>
   );
 };
-
+CartItem.defaultProps = {
+  isCheckout: false,
+};
 export default CartItem;

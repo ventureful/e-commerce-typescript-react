@@ -18,20 +18,22 @@ const useCart = () => {
     }
   }, []);
 
-  const findTotal: () => number = useCallback(() => {
-    const availbleCartItems = { ...cart };
-    const availbleCartItemKey = Object.keys(cart);
+  const findTotal: (newCart: cartStateType) => number = useCallback(newCart => {
+    const availbleCartItems = { ...newCart };
+    const availbleCartItemKey = Object.keys(newCart);
     let total = 0;
-    availbleCartItemKey.forEach(key => {
-      total += availbleCartItems[key].price * availbleCartItems[key].qty;
-    });
+    if (availbleCartItemKey.length > 0) {
+      availbleCartItemKey.forEach(key => {
+        total += availbleCartItems[key].price * availbleCartItems[key].qty;
+      });
+    }
 
     return total;
-  }, [cart]);
+  }, []);
 
   useEffect(() => {
     if (Object.keys(cart).length > 0) {
-      const total = findTotal();
+      const total = findTotal(cart);
       setSubTotal(total);
     }
   }, [findTotal, cart]);
@@ -39,7 +41,7 @@ const useCart = () => {
   const saveCart = useCallback(
     (newCart: cartStateType) => {
       localStorage.setItem("cart", JSON.stringify(newCart));
-      const total = findTotal();
+      const total = findTotal(newCart);
       setSubTotal(total);
     },
     [findTotal]

@@ -26,7 +26,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:justify-start py-2 justify-center items-center shadow-md">
+    <div className="flex flex-col md:flex-row md:justify-start py-2 justify-center items-center shadow-md sticky top-0 bg-white z-10">
       <div className="logo mx-10 my-3">
         <Link href="/">
           <Image
@@ -60,7 +60,7 @@ const Navbar = () => {
 
       <div
         ref={cartRef}
-        className="sideCart  w-72 h-full overflow-auto absolute top-0 right-0 bg-purple-50 px-8 py-10 transform transition-transform translate-x-full"
+        className="sideCart  w-72 h-[100vh] overflow-auto absolute top-0 right-0 bg-purple-50 px-8 py-10 transform transition-transform translate-x-full"
       >
         <h2 className="font-bold text-xl text-center">Shopping Cart</h2>
         <span
@@ -85,13 +85,13 @@ const Navbar = () => {
           <span>{subTotal}</span>
         </div>
         <div className="flex space-x-2">
-          <button
-            type="button"
+          <Link
+            href="/checkout"
             className="flex justify-center items-center text-white bg-purple-500 border-0 py-2 px-2 focus:outline-none hover:bg-purple-600 rounded text-sm"
           >
             <BsFillBagCheckFill className="mx-1" />
             Checkout
-          </button>
+          </Link>
           <button
             type="button"
             onClick={clearCart}
