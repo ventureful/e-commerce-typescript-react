@@ -13,9 +13,9 @@ const Hoodies = () => {
                 <a className="block relative rounded overflow-hidden">
                   <Image
                     width={163}
-                    height={163}
+                    height={100}
                     alt="ecommerce"
-                    className="h-[26vh] md:m-0 m-auto md:h-[36vh] block"
+                    className="h-[26vh] m-auto md:h-[26vh] block"
                     src="https://m.media-amazon.com/images/I/61ZNc27pJ6L._UY741_.jpg"
                   />
                 </a>
