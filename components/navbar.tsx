@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useRef } from "react";
 import { AiFillCloseCircle, AiOutlineShoppingCart } from "react-icons/ai";
 import { BsFillBagCheckFill } from "react-icons/bs";
+import { MdAccountCircle } from "react-icons/md";
 import useCartStore from "../hooks/useCartStore";
 import CartItem from "./cartItem";
 
@@ -51,11 +52,14 @@ const Navbar = () => {
         </ul>
       </div>
 
-      <div
-        onClick={toggleCart}
-        className=" cursor-pointer cart absolute right-0 top-4 mx-5 "
-      >
-        <AiOutlineShoppingCart className="md:text-3xl text-2xl" />
+      <div className=" cursor-pointer cart absolute right-0 top-4 mx-1 md:mx-5 flex space-x-2">
+        <Link href="/login">
+          <MdAccountCircle className="md:text-3xl text-xl" />
+        </Link>
+        <AiOutlineShoppingCart
+          onClick={toggleCart}
+          className="md:text-3xl text-xl"
+        />
       </div>
 
       <div
