@@ -1,10 +1,17 @@
 /* eslint-disable security/detect-object-injection */
 import { useCallback, useEffect, useState } from "react";
-import { addToCartType, cartStateType, removeFromCartType } from "../types";
+import { useRouter } from "next/router";
+import {
+  addToCartType,
+  buyNowType,
+  cartStateType,
+  removeFromCartType,
+} from "../types";
 
 const useCart = () => {
   const [cart, setCart] = useState<cartStateType>({});
   const [subTotal, setSubTotal] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     try {
@@ -49,6 +56,8 @@ const useCart = () => {
 
   const addToCart: addToCartType = useCallback(
     cartItem => {
+      if (!cartItem?.itemCode || !cartItem?.size || !cartItem?.variant) return;
+
       const availbleCartItems = { ...cart };
       const availbleCartItemKey = Object.keys(cart);
       const cartAlreadyPresent =
@@ -65,6 +74,16 @@ const useCart = () => {
     },
     [cart, saveCart]
   );
+
+  const buyNow: buyNowType = cartItem => {
+    if (!cartItem?.itemCode || !cartItem?.size || !cartItem?.variant) return;
+
+    const buyNowItem = { [cartItem.itemCode]: { ...cartItem } };
+    setCart(buyNowItem);
+    saveCart(buyNowItem);
+
+    router.push("/checkout");
+  };
 
   const removeFromCart: removeFromCartType = useCallback(
     itemCode => {
@@ -90,7 +109,7 @@ const useCart = () => {
     setSubTotal(0);
   }, [saveCart]);
 
-  return { cart, subTotal, addToCart, clearCart, removeFromCart };
+  return { cart, subTotal, addToCart, clearCart, removeFromCart, buyNow };
 };
 
 export default useCart;

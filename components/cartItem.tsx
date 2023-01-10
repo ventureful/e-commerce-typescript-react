@@ -15,7 +15,7 @@ const CartItem = ({ cart, isCheckout }: CartItemProps) => {
   return (
     <div className="item flex my-5">
       <div className={`${!isCheckout && "w-2/3"} font-semibold`}>
-        {cart?.name || "-"}
+        {cart?.name || "-"} ({cart?.size}/{cart?.variant})
       </div>
       <div className="w-1/3 font-semibold flex items-center justify-center">
         <span
