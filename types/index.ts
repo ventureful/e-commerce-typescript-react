@@ -1,3 +1,5 @@
+import { UserInterface } from "../hooks/useAuthentication";
+
 export type addToCartStateType = {
   itemCode: string;
   qty: number;
@@ -23,4 +25,9 @@ export interface UseStoreI {
   buyNow: buyNowType;
   clearCart: () => void;
   removeFromCart: (itemCode: string) => void;
+}
+
+export interface UseAuthI {
+  user: UserInterface;
+  logout: () => void;
 }

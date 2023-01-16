@@ -5,8 +5,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import Product from "../../models/Product";
 import connctDb from "../../middleware/connector";
 
-export const arrangeTshirts = (products: any[]) => {
-  const tshirts = products.reduce((acc: any, curr: any) => {
+export const arrangeCloths = (products: any[]) => {
+  const cloths = products.reduce((acc: any, curr: any) => {
     if (acc[curr.title]) {
       if (!acc[curr.title].color.includes(curr.color) && curr.available > 0) {
         acc[curr.title].color.push(curr.color);
@@ -30,7 +30,7 @@ export const arrangeTshirts = (products: any[]) => {
     return acc;
   }, {});
 
-  return tshirts;
+  return cloths;
 };
 
 export const colorSizeSlug = (products: any[]) => {
@@ -47,7 +47,7 @@ export const colorSizeSlug = (products: any[]) => {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const products = await Product.find();
-  const tshirts = arrangeTshirts(products);
+  const tshirts = arrangeCloths(products);
   res.status(200).json({ products: tshirts });
 };
 

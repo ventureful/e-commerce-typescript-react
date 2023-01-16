@@ -1,9 +1,16 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 import { AiOutlineArrowRight } from "react-icons/ai";
 
 const ForgotPassword = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (localStorage.getItem("warethecode-login-token")) router.push("/");
+  }, []);
+
   return (
     <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">

@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { toast } from "react-toastify";
 
 export type usePinCodeT = {
   pinCode: string | undefined;
@@ -34,7 +35,23 @@ const usePinCode = () => {
     const found = result.findIndex((pin: number) => pin === +pinCode);
     if (found !== -1) {
       setIsSericeAvailable(true);
+      toast.success("Service Is Avaliable", {
+        position: "bottom-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        progress: undefined,
+        theme: "light",
+      });
     } else {
+      toast.error("Sorry service not available", {
+        position: "bottom-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        progress: undefined,
+        theme: "light",
+      });
       setIsSericeAvailable(false);
     }
   }, [pinCode]);

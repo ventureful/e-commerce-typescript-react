@@ -1,10 +1,90 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
+  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
+  const router = useRouter();
+
+  useEffect(() => {
+    if (localStorage.getItem("warethecode-login-token")) router.push("/");
+  }, []);
+
+  const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setLoginForm(preValue => {
+      return {
+        ...preValue,
+        [name]: value,
+      };
+    });
+  };
+
+  const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!loginForm.email || !loginForm.password) return;
+
+    try {
+      const res = await fetch("http://localhost:3000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginForm),
+      });
+      const result = await res.json();
+      if (result.success) {
+        localStorage.setItem(
+          "warethecode-login-token",
+          JSON.stringify(result.token)
+        );
+        toast.success("Login succefully", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setTimeout(() => {
+          router.push("/");
+        }, 1000);
+      } else {
+        toast.error(result.error, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } catch (error) {
+      toast.error("Something went wrong", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      console.error(error);
+    }
+  };
   return (
     <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <ToastContainer />
       <div className="w-full max-w-md space-y-8">
         <div>
           <img
@@ -25,11 +105,13 @@ const Login = () => {
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6" action="#" method="POST">
+        <form className="mt-8 space-y-6" onSubmit={handleLoginSubmit}>
           <input type="hidden" name="remember" value="true" />
           <div className="-space-y-px rounded-md shadow-sm">
             <div>
               <input
+                value={loginForm.email}
+                onChange={handleLoginChange}
                 id="email-address"
                 name="email"
                 type="email"
@@ -41,6 +123,8 @@ const Login = () => {
             </div>
             <div>
               <input
+                value={loginForm.password}
+                onChange={handleLoginChange}
                 id="password"
                 name="password"
                 type="password"

@@ -1,19 +1,24 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/mouse-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import Image from "next/image";
 import Link from "next/link";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { AiFillCloseCircle, AiOutlineShoppingCart } from "react-icons/ai";
 import { BsFillBagCheckFill } from "react-icons/bs";
 import { MdAccountCircle } from "react-icons/md";
 import useCartStore from "../hooks/useCartStore";
 import CartItem from "./cartItem";
+import useAuthStore from "../hooks/useAuthStore";
 
 const OPEN_CART_CLASS = "translate-x-full";
 const CLOSE_CART_CLASS = "translate-x-0";
 
 const Navbar = () => {
+  const [dropDown, setDropDown] = useState(false);
   const { cart = {}, subTotal = 0, clearCart } = useCartStore();
+  const { user, logout } = useAuthStore();
   const cartRef = useRef<HTMLDivElement | null>(null);
 
   const toggleCart = () => {
@@ -52,10 +57,33 @@ const Navbar = () => {
         </ul>
       </div>
 
-      <div className=" cursor-pointer cart absolute right-0 top-4 mx-1 md:mx-5 flex space-x-2">
-        <Link href="/login">
-          <MdAccountCircle className="md:text-3xl text-xl" />
-        </Link>
+      <div className="cursor-pointer cart absolute right-0 top-4 mx-1 md:mx-5 flex item-center space-x-2">
+        <a
+          onMouseOver={() => setDropDown(true)}
+          onMouseLeave={() => setDropDown(false)}
+        >
+          {dropDown && (
+            <ul className="absolute right-9 top-7 rounded px-5 w-40 py-2 bg-purple-200">
+              <Link href="/account">
+                <li className="py-1 text-sm hover:text-gray-500">My Account</li>
+              </Link>
+              <Link href="/order">
+                <li className="py-1 text-sm hover:text-gray-500">Orders</li>
+              </Link>
+              <li onClick={logout} className="py-1 text-sm hover:text-gray-500">
+                Logout
+              </li>
+            </ul>
+          )}
+          {user.value && <MdAccountCircle className="md:text-3xl text-xl" />}
+        </a>
+        {!user.value && (
+          <Link href="/login">
+            <span className="flex justify-center items-center text-white bg-purple-500 border-0 py-2 px-2 focus:outline-none hover:bg-purple-600 rounded text-sm">
+              Login
+            </span>
+          </Link>
+        )}
         <AiOutlineShoppingCart
           onClick={toggleCart}
           className="md:text-3xl text-xl"

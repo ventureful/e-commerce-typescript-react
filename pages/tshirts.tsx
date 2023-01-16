@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import Product from "../models/Product";
-import { arrangeTshirts } from "./api/getproducts";
+import { arrangeCloths } from "./api/getproducts";
 
 type ProductsType = {
   _id: string;
@@ -92,7 +92,7 @@ const Tshirts: React.FC<TshirtProsType> = ({ products }) => {
                         <span className="border-2 border-gray-300 ml-1 bg-blue-700 rounded-full w-6 h-6 focus:outline-none" />
                       )}
                       {products[item].color.includes("black") && (
-                        <span className="border-2 border-gray-300 ml-1 bg-black-700 rounded-full w-6 h-6 focus:outline-none" />
+                        <span className="border-2 border-gray-300 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none" />
                       )}
                       {products[item].color.includes("purple") && (
                         <span className="border-2 border-gray-300 ml-1 bg-purple-700 rounded-full w-6 h-6 focus:outline-none" />
@@ -101,7 +101,7 @@ const Tshirts: React.FC<TshirtProsType> = ({ products }) => {
                         <span className="border-2 border-gray-300 ml-1 bg-yellow-700 rounded-full w-6 h-6 focus:outline-none" />
                       )}
                       {products[item].color.includes("white") && (
-                        <span className="border-2 border-gray-300 ml-1 bg-white-700 rounded-full w-6 h-6 focus:outline-none" />
+                        <span className="border-2 border-gray-300 ml-1 bg-white rounded-full w-6 h-6 focus:outline-none" />
                       )}
                       {products[item].color.includes("gray") && (
                         <span className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none" />
@@ -124,7 +124,7 @@ export const getServerSideProps = async () => {
   }
 
   const products = await Product.find({ category: "tshirts" });
-  const tshirts = arrangeTshirts(products);
+  const tshirts = arrangeCloths(products);
 
   return {
     props: {

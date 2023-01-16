@@ -4,6 +4,9 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import mongoose from "mongoose";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import useCartStore from "../../hooks/useCartStore";
 import usePinCode, { usePinCodeT } from "../../hooks/usePinCode";
 import ProductModal from "../../models/Product";
@@ -33,12 +36,14 @@ type colorSizeSlugType = {
 
 type ProductProps = {
   product: ProductType;
+  variants: ProductType[];
   colorSizeSlugs: colorSizeSlugType;
 };
 
 const Product: React.FC<ProductProps> = ({
   product,
-  colorSizeSlugs: variants,
+  colorSizeSlugs,
+  variants,
 }) => {
   const {
     pinCode,
@@ -48,24 +53,103 @@ const Product: React.FC<ProductProps> = ({
     serviceText,
   }: usePinCodeT = usePinCode();
   const { addToCart, buyNow } = useCartStore();
-  const [color, setColor] = useState(product.color);
-  const [size, setSize] = useState("");
+  const [diplayedProduct, setDisplayedProduct] = useState({
+    itemCode: product.slug,
+    qty: 1,
+    price: product.price,
+    name: product.title,
+    size: product.size,
+    variant: product.color,
+  });
+  const router = useRouter();
 
   useEffect(() => {
-    setSize("");
-  }, [color]);
+    try {
+      if (localStorage.getItem("displayedProduct")) {
+        setDisplayedProduct(
+          JSON.parse(localStorage.getItem("displayedProduct") || "{}")
+        );
+      }
+    } catch (error) {
+      console.error("error", error);
+      localStorage.clear();
+    }
 
-  // const refreshPage: (newSize: string) => void = (newSize: string) => {
-  //   setSize(newSize);
-  //   if (variants[color][newSize]) {
-  //     const url = `http://localhost:3000/product/${variants[color][newSize]?.slug}`;
+    return () => {
+      localStorage.removeItem("displayedProduct");
+    };
+  }, []);
 
-  //     window.location = url;
-  //   }
-  // };
+  useEffect(() => {
+    if (router.query.slug !== diplayedProduct.itemCode) {
+      const url = ` http://localhost:3000/product/${diplayedProduct.itemCode}`;
+      const win: Window = window;
+      win.location = url;
+    }
+  }, [diplayedProduct.itemCode, router.query.slug]);
+
+  const refreshPage: (key: string, value: string) => void = (key, value) => {
+    setDisplayedProduct(prevProduct => {
+      if (key === "variant") {
+        const size = Object.keys(colorSizeSlugs[value]).includes(
+          prevProduct.size
+        )
+          ? prevProduct.size
+          : Object.keys(colorSizeSlugs[value])[0];
+
+        const itemCode = colorSizeSlugs[value][size].slug;
+
+        const { price } = variants.find(v => v.slug === itemCode) || {
+          price: prevProduct.price,
+        };
+
+        localStorage.setItem(
+          "displayedProduct",
+          JSON.stringify({
+            ...prevProduct,
+            [key]: value,
+            price,
+            size,
+            itemCode,
+          })
+        );
+
+        return {
+          ...prevProduct,
+          [key]: value,
+          price,
+          size,
+          itemCode,
+        };
+      }
+
+      const itemCode = colorSizeSlugs[prevProduct.variant][value].slug;
+      const { price } = variants.find(v => v.slug === itemCode) || {
+        price: prevProduct.price,
+      };
+
+      localStorage.setItem(
+        "displayedProduct",
+        JSON.stringify({
+          ...prevProduct,
+          [key]: value,
+          price,
+          itemCode,
+        })
+      );
+
+      return {
+        ...prevProduct,
+        [key]: value,
+        price,
+        itemCode,
+      };
+    });
+  };
 
   return (
     <div>
+      <ToastContainer />
       <section className="text-gray-600 body-font overflow-hidden">
         <div className="container px-5 py-16 mx-auto">
           <div className="lg:w-4/5 mx-auto flex flex-wrap">
@@ -79,7 +163,8 @@ const Product: React.FC<ProductProps> = ({
                 CODESWARE.com
               </h2>
               <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
-                {product.title} ({size || "Select size"}/{color})
+                {diplayedProduct.name} ({diplayedProduct.size || "Select size"}/
+                {diplayedProduct.variant})
               </h1>
               <div className="flex mb-4">
                 <span className="flex items-center">
@@ -183,59 +268,73 @@ const Product: React.FC<ProductProps> = ({
               <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
                 <div className="flex">
                   <span className="mr-3">Color</span>
-                  {Object.keys(variants).includes("red") && (
+                  {Object.keys(colorSizeSlugs).includes("red") && (
                     <span
-                      onClick={() => setColor("red")}
+                      onClick={() => refreshPage("variant", "red")}
                       className={`border-2 ml-1 bg-red-700 rounded-full w-6 h-6 focus:outline-none ${
-                        color === "red" ? "border-black" : "border-gray-300"
+                        diplayedProduct.variant === "red"
+                          ? "border-black"
+                          : "border-gray-300"
                       }`}
                     />
                   )}
-                  {Object.keys(variants).includes("blue") && (
+                  {Object.keys(colorSizeSlugs).includes("blue") && (
                     <span
-                      onClick={() => setColor("blue")}
+                      onClick={() => refreshPage("variant", "blue")}
                       className={`border-2 ml-1 bg-blue-700 rounded-full w-6 h-6 focus:outline-none ${
-                        color === "blue" ? "border-black" : "border-gray-300"
+                        diplayedProduct.variant === "blue"
+                          ? "border-black"
+                          : "border-gray-300"
                       }`}
                     />
                   )}
-                  {Object.keys(variants).includes("black") && (
+                  {Object.keys(colorSizeSlugs).includes("black") && (
                     <span
-                      onClick={() => setColor("black")}
+                      onClick={() => refreshPage("variant", "black")}
                       className={`border-2 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none ${
-                        color === "black" ? "border-black" : "border-gray-300"
+                        diplayedProduct.variant === "black"
+                          ? "border-black"
+                          : "border-gray-300"
                       }`}
                     />
                   )}
-                  {Object.keys(variants).includes("purple") && (
+                  {Object.keys(colorSizeSlugs).includes("purple") && (
                     <span
-                      onClick={() => setColor("purple")}
+                      onClick={() => refreshPage("variant", "purple")}
                       className={`border-2 ml-1 bg-purple-700 rounded-full w-6 h-6 focus:outline-none ${
-                        color === "purple" ? "border-black" : "border-gray-300"
+                        diplayedProduct.variant === "purple"
+                          ? "border-black"
+                          : "border-gray-300"
                       }`}
                     />
                   )}
-                  {Object.keys(variants).includes("yellow") && (
+                  {Object.keys(colorSizeSlugs).includes("yellow") && (
                     <span
-                      onClick={() => setColor("yellow")}
+                      onClick={() => refreshPage("variant", "yellow")}
                       className={`border-2 ml-1 bg-yellow-700 rounded-full w-6 h-6 focus:outline-none ${
-                        color === "yellow" ? "border-black" : "border-gray-300"
+                        diplayedProduct.variant === "yellow"
+                          ? "border-black"
+                          : "border-gray-300"
                       }`}
                     />
                   )}
-                  {Object.keys(variants).includes("white") && (
+                  {Object.keys(colorSizeSlugs).includes("white") && (
                     <span
-                      onClick={() => setColor("white")}
+                      onClick={() => refreshPage("variant", "white")}
                       className={`border-2 ml-1 bg-white-700 rounded-full w-6 h-6 focus:outline-none ${
-                        color === "white" ? "border-black" : "border-gray-300"
+                        diplayedProduct.variant === "white"
+                          ? "border-black"
+                          : "border-gray-300"
                       }`}
                     />
                   )}
-                  {Object.keys(variants).includes("gray") && (
+                  {Object.keys(colorSizeSlugs).includes("gray") && (
                     <span
-                      onClick={() => setColor("gray")}
+                      onClick={() => refreshPage("variant", "gray")}
                       className={`border-2 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none ${
-                        color === "gray" ? "border-black" : "border-gray-300"
+                        diplayedProduct.variant === "gray"
+                          ? "border-black"
+                          : "border-gray-300"
                       }`}
                     />
                   )}
@@ -244,26 +343,26 @@ const Product: React.FC<ProductProps> = ({
                   <span className="mr-3">Size</span>
                   <div className="relative">
                     <select
-                      onChange={e => setSize(e.target.value)}
-                      value={size}
+                      onChange={e => refreshPage("size", e.target.value)}
+                      value={diplayedProduct.size}
                       className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-500 text-base pl-3 pr-10"
                     >
                       <option value="">Select Size</option>
-                      {Object.keys(variants[color]).includes("S") && (
-                        <option value="S">S</option>
-                      )}
-                      {Object.keys(variants[color]).includes("M") && (
-                        <option value="M">M</option>
-                      )}
-                      {Object.keys(variants[color]).includes("L") && (
-                        <option value="L">L</option>
-                      )}
-                      {Object.keys(variants[color]).includes("XL") && (
-                        <option value="XL">XL</option>
-                      )}
-                      {Object.keys(variants[color]).includes("XXL") && (
-                        <option value="XXL">XXL</option>
-                      )}
+                      {Object.keys(
+                        colorSizeSlugs[diplayedProduct.variant]
+                      ).includes("S") && <option value="S">S</option>}
+                      {Object.keys(
+                        colorSizeSlugs[diplayedProduct.variant]
+                      ).includes("M") && <option value="M">M</option>}
+                      {Object.keys(
+                        colorSizeSlugs[diplayedProduct.variant]
+                      ).includes("L") && <option value="L">L</option>}
+                      {Object.keys(
+                        colorSizeSlugs[diplayedProduct.variant]
+                      ).includes("XL") && <option value="XL">XL</option>}
+                      {Object.keys(
+                        colorSizeSlugs[diplayedProduct.variant]
+                      ).includes("XXL") && <option value="XXL">XXL</option>}
                     </select>
                     <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
                       <svg
@@ -283,20 +382,11 @@ const Product: React.FC<ProductProps> = ({
               </div>
               <div className="flex">
                 <span className="title-font font-medium text-xl md:text-2xl text-gray-900">
-                  {product.price} ₹
+                  {diplayedProduct.price} ₹
                 </span>
                 <button
                   type="button"
-                  onClick={() =>
-                    buyNow({
-                      itemCode: variants[color][size]?.slug,
-                      qty: 1,
-                      price: product.price,
-                      name: product.title,
-                      size,
-                      variant: color,
-                    })
-                  }
+                  onClick={() => buyNow(diplayedProduct)}
                   className="flex ml-4 md:ml-8 text-white bg-purple-500 border-0 py-2 px-2 text-sm md:text-lg md:px-6 focus:outline-none hover:bg-purple-600 rounded"
                 >
                   Buy Now
@@ -304,16 +394,7 @@ const Product: React.FC<ProductProps> = ({
                 <button
                   type="button"
                   className="flex ml-4 text-white bg-purple-500 border-0 py-2 px-2  text-sm md:text-lg  md:px-6 focus:outline-none hover:bg-purple-600 rounded"
-                  onClick={() =>
-                    addToCart({
-                      itemCode: variants[color][size]?.slug,
-                      qty: 1,
-                      price: product.price,
-                      name: product.title,
-                      size,
-                      variant: color,
-                    })
-                  }
+                  onClick={() => addToCart(diplayedProduct)}
                 >
                   Add to cart
                 </button>
@@ -368,12 +449,16 @@ export const getServerSideProps = async (context: {
   }
 
   const product = await ProductModal.findOne({ slug: context.query.slug });
-  const variants = await ProductModal.find({ title: product.title });
+  const variants = await ProductModal.find({
+    title: product.title,
+    category: product.category,
+  });
   const colorSizeSlugs = colorSizeSlug(variants);
   return {
     props: {
       product: JSON.parse(JSON.stringify(product)),
       colorSizeSlugs: JSON.parse(JSON.stringify(colorSizeSlugs)),
+      variants: JSON.parse(JSON.stringify(variants)),
     },
   };
 };

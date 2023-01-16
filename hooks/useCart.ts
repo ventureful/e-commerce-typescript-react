@@ -1,6 +1,8 @@
 /* eslint-disable security/detect-object-injection */
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+
 import {
   addToCartType,
   buyNowType,
@@ -68,7 +70,14 @@ const useCart = () => {
       } else {
         availbleCartItems[cartItem.itemCode] = cartItem;
       }
-
+      toast.success("Added to cart", {
+        position: "bottom-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        progress: undefined,
+        theme: "light",
+      });
       setCart(availbleCartItems);
       saveCart(availbleCartItems);
     },

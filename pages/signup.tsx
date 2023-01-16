@@ -1,10 +1,70 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
+  const [user, setUser] = useState({ name: "", email: "", password: "" });
+  const router = useRouter();
+
+  useEffect(() => {
+    if (localStorage.getItem("warethecode-login-token")) router.push("/");
+  }, []);
+
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      if (user.name && user.email && user.password) {
+        const res = await fetch("http://localhost:3000/api/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+        });
+        const data = await res.json();
+        toast.success("User Created Sussfully", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        console.log(data);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Account Already Created", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+
+    setUser({ name: "", email: "", password: "" });
+  };
+
+  const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setUser(prevUser => {
+      return { ...prevUser, [name]: value };
+    });
+  };
+
   return (
     <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <ToastContainer />
       <div className="w-full max-w-md space-y-8">
         <div>
           <img
@@ -25,12 +85,19 @@ const Signup = () => {
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6" action="#" method="POST">
+        <form
+          onSubmit={handleSignup}
+          className="mt-8 space-y-6"
+          action="#"
+          method="POST"
+        >
           <input type="hidden" name="remember" value="true" />
           <div className="-space-y-px rounded-md shadow-sm">
             <div>
               <input
+                onChange={handleUserChange}
                 id="name"
+                value={user.name}
                 name="name"
                 type="name"
                 autoComplete="name"
@@ -41,7 +108,9 @@ const Signup = () => {
             </div>
             <div>
               <input
+                onChange={handleUserChange}
                 id="email-address"
+                value={user.email}
                 name="email"
                 type="email"
                 autoComplete="email"
@@ -52,7 +121,9 @@ const Signup = () => {
             </div>
             <div>
               <input
+                onChange={handleUserChange}
                 id="password"
+                value={user.password}
                 name="password"
                 type="password"
                 autoComplete="current-password"
