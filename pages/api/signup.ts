@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         email,
         password: CryptoJS.AES.encrypt(
           req.body.password,
-          "mysecret"
+          process.env.ENCRYPTION_DECRYPTION_KEY || ""
         ).toString(),
       });
       user.save();

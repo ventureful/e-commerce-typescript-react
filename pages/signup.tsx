@@ -10,14 +10,15 @@ const Signup = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (localStorage.getItem("warethecode-login-token")) router.push("/");
+    if (localStorage.getItem(process.env.NEXT_PUBLIC_USER_TOKEN || ""))
+      router.push("/");
   }, []);
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       if (user.name && user.email && user.password) {
-        const res = await fetch("http://localhost:3000/api/signup", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/signup`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

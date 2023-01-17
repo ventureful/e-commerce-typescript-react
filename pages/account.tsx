@@ -5,7 +5,8 @@ const Account = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!localStorage.getItem("warethecode-login-token")) router.push("/");
+    if (!localStorage.getItem(process.env.NEXT_PUBLIC_USER_TOKEN || ""))
+      router.push("/");
   }, []);
   return <div>Account</div>;
 };

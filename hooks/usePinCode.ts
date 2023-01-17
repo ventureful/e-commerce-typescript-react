@@ -30,7 +30,7 @@ const usePinCode = () => {
 
   const checkServiceAvailbilty = useCallback(async () => {
     if (!pinCode) return;
-    const response = await fetch("http://localhost:3000/api/pincode");
+    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`);
     const result = await response.json();
     const found = result.findIndex((pin: number) => pin === +pinCode);
     if (found !== -1) {

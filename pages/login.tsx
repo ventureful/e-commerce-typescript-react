@@ -8,9 +8,9 @@ import "react-toastify/dist/ReactToastify.css";
 const Login = () => {
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const router = useRouter();
-
   useEffect(() => {
-    if (localStorage.getItem("warethecode-login-token")) router.push("/");
+    if (localStorage.getItem(process.env.NEXT_PUBLIC_USER_TOKEN || ""))
+      router.push("/");
   }, []);
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +30,7 @@ const Login = () => {
     if (!loginForm.email || !loginForm.password) return;
 
     try {
-      const res = await fetch("http://localhost:3000/api/login", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,7 +40,7 @@ const Login = () => {
       const result = await res.json();
       if (result.success) {
         localStorage.setItem(
-          "warethecode-login-token",
+          process.env.NEXT_PUBLIC_USER_TOKEN || "",
           JSON.stringify(result.token)
         );
         toast.success("Login succefully", {

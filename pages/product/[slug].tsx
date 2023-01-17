@@ -82,7 +82,7 @@ const Product: React.FC<ProductProps> = ({
 
   useEffect(() => {
     if (router.query.slug !== diplayedProduct.itemCode) {
-      const url = ` http://localhost:3000/product/${diplayedProduct.itemCode}`;
+      const url = `${process.env.NEXT_PUBLIC_HOST}/product/${diplayedProduct.itemCode}`;
       const win: Window = window;
       win.location = url;
     }

@@ -12,7 +12,9 @@ const useAuthentication = () => {
 
   useEffect(() => {
     try {
-      const token = localStorage.getItem("warethecode-login-token");
+      const token = localStorage.getItem(
+        process.env.NEXT_PUBLIC_USER_TOKEN || ""
+      );
       if (token) {
         setUser({ value: token });
       }
@@ -24,9 +26,14 @@ const useAuthentication = () => {
   }, [router.query]);
 
   const logout = () => {
-    localStorage.removeItem("warethecode-login-token");
-    setUser({ value: null });
-    router.push("/");
+    try {
+      localStorage.removeItem(process.env.NEXT_PUBLIC_USER_TOKEN || "");
+      setUser({ value: null });
+      router.push("/");
+    } catch (error) {
+      localStorage.clear();
+      console.error(error);
+    }
   };
 
   return { user, logout };

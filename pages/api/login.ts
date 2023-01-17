@@ -14,13 +14,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       if (user) {
         const { name, email } = user;
 
-        const bytes = CryptoJS.AES.decrypt(user.password, "mysecret");
+        const bytes = CryptoJS.AES.decrypt(
+          user.password,
+          process.env.ENCRYPTION_DECRYPTION_KEY || ""
+        );
         const password = bytes.toString(CryptoJS.enc.Utf8);
 
         if (req.body.email === email && req.body.password === password) {
-          const token = jwt.sign({ name, email }, "jwtsecreat", {
-            expiresIn: "2d",
-          });
+          const token = jwt.sign(
+            { name, email },
+            process.env.JWT_SECRET_KEY || "",
+            {
+              expiresIn: "2d",
+            }
+          );
 
           res.status(200).json({ success: true, token });
         } else {
