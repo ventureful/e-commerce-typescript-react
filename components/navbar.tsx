@@ -63,14 +63,21 @@ const Navbar = () => {
           onMouseLeave={() => setDropDown(false)}
         >
           {dropDown && (
-            <ul className="absolute right-9 top-7 rounded px-5 w-40 py-2 bg-purple-200">
+            <ul className="absolute right-9 top-7 rounded px-5 w-40 py-2 shadow-md bg-white text-black ">
               <Link href="/account">
-                <li className="py-1 text-sm hover:text-gray-500">My Account</li>
+                <li className="py-1 text-sm hover:hover:text-purple-700 font-bold">
+                  My Account
+                </li>
               </Link>
-              <Link href="/order">
-                <li className="py-1 text-sm hover:text-gray-500">Orders</li>
+              <Link href="/orders">
+                <li className="py-1 text-sm hover:hover:text-purple-700 font-bold">
+                  Orders
+                </li>
               </Link>
-              <li onClick={logout} className="py-1 text-sm hover:text-gray-500">
+              <li
+                onClick={logout}
+                className="py-1 text-sm hover:hover:text-purple-700 font-bold"
+              >
                 Logout
               </li>
             </ul>

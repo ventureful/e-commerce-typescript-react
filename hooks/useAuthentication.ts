@@ -26,6 +26,7 @@ const useAuthentication = () => {
   const logout = () => {
     localStorage.removeItem("warethecode-login-token");
     setUser({ value: null });
+    router.push("/");
   };
 
   return { user, logout };
