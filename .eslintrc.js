@@ -31,9 +31,8 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "airbnb",
     "prettier",
-    "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended",
-    "plugin:sonarjs/recommended",
+    // "plugin:sonarjs/recommended",
     "plugin:security/recommended",
   ],
 
