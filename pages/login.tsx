@@ -8,10 +8,11 @@ import "react-toastify/dist/ReactToastify.css";
 const Login = () => {
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const router = useRouter();
+
   useEffect(() => {
     if (localStorage.getItem(process.env.NEXT_PUBLIC_USER_TOKEN || ""))
       router.push("/");
-  }, []);
+  }, [router]);
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
