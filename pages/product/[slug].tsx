@@ -71,7 +71,7 @@ const Product: React.FC<ProductProps> = ({
         );
       }
     } catch (error) {
-      console.error("error", error);
+      // console.error("error", error);
       localStorage.clear();
     }
 

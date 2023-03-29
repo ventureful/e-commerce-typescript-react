@@ -24,7 +24,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await Promise.all(pPromise);
       res.status(200).json({ result: "succss" });
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       res.status(401).json({ result: "Account is Already created" });
     }
   } else {

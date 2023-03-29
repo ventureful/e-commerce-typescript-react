@@ -20,7 +20,7 @@ const useAuthentication = () => {
       }
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
+      // console.error(error);
       localStorage.clear();
     }
   }, [router.query]);
@@ -32,7 +32,7 @@ const useAuthentication = () => {
       router.push("/");
     } catch (error) {
       localStorage.clear();
-      console.error(error);
+      // console.error(error);
     }
   };
 

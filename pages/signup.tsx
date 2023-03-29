@@ -18,14 +18,13 @@ const Signup = () => {
     e.preventDefault();
     try {
       if (user.name && user.email && user.password) {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/signup`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/signup`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(user),
         });
-        const data = await res.json();
         toast.success("User Created Sussfully", {
           position: "top-right",
           autoClose: 2000,
@@ -36,10 +35,9 @@ const Signup = () => {
           progress: undefined,
           theme: "light",
         });
-        console.log(data);
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       toast.error("Account Already Created", {
         position: "top-right",
         autoClose: 2000,
