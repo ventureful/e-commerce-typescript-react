@@ -80,7 +80,7 @@ const Login = () => {
         progress: undefined,
         theme: "light",
       });
-      console.error(error);
+      // console.error(error);
     }
   };
   return (

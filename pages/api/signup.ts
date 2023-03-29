@@ -19,7 +19,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       user.save();
       res.status(200).json({ result: "succss" });
     } catch (error) {
-      console.log(error);
       res.status(401).json({ msg: "Account Already Created" });
     }
   } else {

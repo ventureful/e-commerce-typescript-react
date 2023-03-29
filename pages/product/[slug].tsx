@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import mongoose from "mongoose";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useCartStore from "../../hooks/useCartStore";
@@ -61,7 +61,7 @@ const Product: React.FC<ProductProps> = ({
     size: product.size,
     variant: product.color,
   });
-  const router = useRouter();
+  // const router = useRouter();
 
   useEffect(() => {
     try {
@@ -71,7 +71,7 @@ const Product: React.FC<ProductProps> = ({
         );
       }
     } catch (error) {
-      console.error("error", error);
+      // console.error("error", error);
       localStorage.clear();
     }
 
@@ -80,13 +80,13 @@ const Product: React.FC<ProductProps> = ({
     };
   }, []);
 
-  useEffect(() => {
-    if (router.query.slug !== diplayedProduct.itemCode) {
-      const url = `${process.env.NEXT_PUBLIC_HOST}/product/${diplayedProduct.itemCode}`;
-      const win: Window = window;
-      win.location = url;
-    }
-  }, [diplayedProduct.itemCode, router.query.slug]);
+  // useEffect(() => {
+  //   if (router.query.slug !== diplayedProduct.itemCode) {
+  //     const url = `${process.env.NEXT_PUBLIC_HOST}/product/${diplayedProduct.itemCode}`;
+  //     const win: Window = window;
+  //     win.location = url;
+  //   }
+  // }, [diplayedProduct.itemCode, router.query.slug]);
 
   const refreshPage: (key: string, value: string) => void = (key, value) => {
     setDisplayedProduct(prevProduct => {
